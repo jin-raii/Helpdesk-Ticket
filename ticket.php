@@ -10,6 +10,7 @@ $user = $users->getUserInfo();
 // date_default_timezone_set('Asia/Kathmandu');
 // phpinfo();
 // echo date_default_timezone_get();
+// echo(isset($_SESSION["admin"]));
 ?>
 
 
@@ -75,7 +76,10 @@ $user = $users->getUserInfo();
 					<th>Ticket ID</th>
 					<th>Computer</th>
 					<th>Department</th>
-					<th>Created By</th>					
+					<?php if(isset($_SESSION['admin'])) { ?>
+						<th>Solution</th>
+					<?php } ?>
+					<th>User</th>					
 					<th>Created</th>	
 					<th>Status</th>
 					<th></th>

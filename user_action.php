@@ -2,8 +2,12 @@
 include 'init.php';
 
 if(!empty($_POST['action']) && $_POST['action'] == 'listUser') {
+	
 	$users->listUser();
 }
+
+
+
 
 if(!empty($_POST['action']) && $_POST['action'] == 'getUserDetails') {
 	$userId = $_POST["userId"];

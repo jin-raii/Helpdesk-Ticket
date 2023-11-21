@@ -11,8 +11,22 @@
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color: #FFFFFF"><span class="label label-pill label-danger count"></span> 
-				<img src="image/u.png" width="30px" >&nbsp;<?php if(isset($_SESSION["userid"])) { echo $user['name']; } ?></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" >
+				<img src="image/u.png" width="30px" >&nbsp;
+				<span>
+
+					<?php 
+					if(isset($_SESSION["userid"])) { 
+						// var_dump($_SESSION);
+    					// var_dump($user);
+						// if(isset($user) && isset($user['userid'])) {
+						// 	echo $_SESSION['userid'];
+						// }
+						echo $_SESSION['userid'];
+					}
+					?>
+				</span>
+				</a>
 				<ul class="dropdown-menu">					
 					<li><a href="logout.php">Logout</a></li>
 				</ul>

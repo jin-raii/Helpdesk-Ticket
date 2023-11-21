@@ -5,6 +5,7 @@ if(!$users->isLoggedIn()) {
 }
 include('inc/header.php');
 $ticketDetails = $tickets->ticketInfo($_GET['id']);
+
 $ticketReplies = $tickets->getTicketReplies($ticketDetails['id']);
 $user = $users->getUserInfo();
 $tickets->updateTicketReadStatus($ticketDetails['id']);
@@ -40,7 +41,7 @@ $tickets->updateTicketReadStatus($ticketDetails['id']);
 					<span class="ticket-title"><?php echo $ticketDetails['title']; ?></span>
 					</div>
 					<div class="panel-body">						
-						<div class="comment-post">
+						<div class="comment-post" style='color:#000;'>
 						<p>
 						<?php echo $ticketDetails['message']; ?>
 						</p>
@@ -55,21 +56,24 @@ $tickets->updateTicketReadStatus($ticketDetails['id']);
 			</div>
 		</article>		
 		
-		<?php foreach ($ticketReplies as $replies) { ?>		
+		<?php foreach ($ticketReplies as $replies) { 
+			
+			?>		
+			
 			<article class="row">
 				<div class="col-md-10 col-sm-10">
 					<div class="panel panel-default arrow right" id="reply-head">
 						<div class="panel-heading">
-							<?php if($replies['user_type'] == 'admin') { ?>							
-								<span class="glyphicon glyphicon-user"></span> <?php echo $ticketDetails['department']; ?>
-							<?php } else { ?>
-								<span class="glyphicon glyphicon-user"></span> <?php echo $replies['creater']; ?>
+							<?php if($_SESSION['userid']  == 'admin' || $_SESSION['userid'] == 'rajesh rai' || $_SESSION['userid'] == 'praven shakya') { ?>							
+								<span class="glyphicon glyphicon-user "></span> <label for="" class="label label-danger"><?php echo $replies['creater']; ?></label> 
+								<?php } else { ?>
+									<span class="glyphicon glyphicon-user"></span> <?php echo $replies['creater']; ?>
 							<?php } ?>
 							&nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span> <time class="comment-date" datetime="16-12-2014 01:05"><i class="fa fa-clock-o"></i> <?php echo $time->ago($replies['date']); ?></time>							
 						</div>
 						<div class="panel-body">						
 							<div class="comment-post">
-							<p>
+							<p style='color:#000;'>
 							<?php echo $replies['message']; ?>
 							</p>
 							</div>                  

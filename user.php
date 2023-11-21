@@ -4,7 +4,8 @@ if(!$users->isLoggedIn()) {
 	header("Location: login.php");	
 }
 include('inc/header.php');
-$user = $users->getUserInfo();
+// $user = $users->getUserInfo();
+// print_r($user);
 ?>
 <title>Helpdesk System</title>
 <script src="js/jquery.dataTables.min.js"></script>
@@ -29,7 +30,7 @@ $user = $users->getUserInfo();
 				<h3 class="panel-title"></h3>
 			</div>
 			<div class="col-md-2" align="right">
-				<button type="button" name="add" id="addUser" class="btn btn-success btn-xs">Add New</button>
+				<!-- <button type="button" name="add" id="addUser" class="btn btn-success btn-xs">Add New</button> -->
 			</div>
 		</div>
 	</div>
@@ -40,11 +41,11 @@ $user = $users->getUserInfo();
 				<th>S/N</th>
 				<th>Name</th>					
 				<th>Email</th>
-				<th>Created</th>
+				<th>Logon Count</th>
 				<th>Role</th>
-				<th>Status</th>
-				<th></th>
-				<th></th>				
+				<th>Created Date</th>
+				<!-- <th></th> -->
+				<!-- <th></th>				 -->
 			</tr>
 		</thead>
 	</table>

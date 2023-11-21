@@ -8,7 +8,7 @@
 					<h4 class="modal-title"><i class="fa fa-plus"></i> Add Ticket</h4>
 				</div>
 				<div class="modal-body">
-					<div class="form-group"
+					<div class="form-group">
 						<label for="subject" class="control-label">Computer Name</label>
 						<input type="text" class="form-control" id="subject" name="subject" placeholder="e.g Arbutus, Allium" required>			
 					</div>
@@ -18,10 +18,18 @@
 							<?php $tickets->getDepartments(); ?>
 						</select>						
 					</div>						
-					<div class="form-group">
+					<div class="form-group" >
 						<label for="message" class="control-label">Message</label>							
 						<textarea class="form-control" rows="5" id="message" name="message"></textarea>							
 					</div>	
+					<?php if(isset($_SESSION['admin'])) { ?>
+
+						<!-- Added Field for ticket solution  -->
+						<div class="form-group" id="solution-form">
+							<label for="solution" class="control-label">Solution</label>							
+							<textarea class="form-control" id="solution" name="solution" placeholder="Solution" required></textarea>							
+						</div>	
+					<?php } ?>
 					<div class="form-group">
 						<label for="status" class="control-label">Status</label>							
 						<label class="radio-inline">

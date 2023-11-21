@@ -16,7 +16,8 @@ if(!empty($_POST['action']) && $_POST['action'] == 'createTicket') {
 	// $user = $users->getUserInfo();
 	// sendEmail($user['email']);
 	// sendEmail('jinrai577@gmail.com');
-	echo $_POST['action'];
+	// echo $_POST['action'];
+	// print_r($_SESSION['userid']);
 
 	// if ($tickets->success) {
     //     echo 'Ticket created successfully';

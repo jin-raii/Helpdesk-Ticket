@@ -5,6 +5,7 @@ if($users->isLoggedIn()) {
 }
 $errorMessage = $users->login();
 include('inc/header.php');
+// var_dump(isset($_SESSION["admin"]));
 ?>
 <title>Helpdesk System</title>
 <link rel="stylesheet" href="css/style.css">

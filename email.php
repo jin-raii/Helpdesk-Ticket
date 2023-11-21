@@ -1,10 +1,4 @@
 <?php
-//Import PHPMailer classes into the global namespace
-//These must be at the top of your script, not inside a function
-// require_once 'vendor/autoload.php';
-// use PHPMailer\src\PHPMailer;
-// use PHPMailer\src\SMTP;
-// use PHPMailer\src\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -13,7 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 
 include 'init.php';
-
+print_r($_SESSION);
 $user = $users->getUserInfo();
 function sendEmail($email, $departmentName, $description, $userName, $subject) {
     
@@ -32,25 +26,25 @@ echo 'Username: ' . $userName . '<br>';
             'allow_self_signed' => true
             )
             );                                      //Send using SMTP
-        // $mail->Host       = '192.168.99.5';                     //Set the SMTP server to send through
-        // $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        // $mail->Username   = 'ticket.system@incessantrainacademy.com';                     //SMTP username
-        // $mail->Password   = 'AerGFcqMdUTVB)78';                               //SMTP password
-        // $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-        // // // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
-        // $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->Host       = '192.168.99.5';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'ticket.system@incessantrainacademy.com';                     //SMTP username
+        $mail->Password   = 'AerGFcqMdUTVB)78';                               //SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        // // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
         // $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
 
-        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'iracademy.3d@gmail.com';                     //SMTP username
-        $mail->Password   = "nsisqamchvcatgvp";  
-        // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;                             //SMTP password
-        // $mail->Port = 587;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-        $mail->Port       = 465;  
-        $mail->SMTPSecure = "ssl"; 
+        // $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+        // $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        // $mail->Username   = 'iracademy.3d@gmail.com';                     //SMTP username
+        // $mail->Password   = "nsisqamchvcatgvp";  
+        // // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;                             //SMTP password
+        // // $mail->Port = 587;
+        // $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        // $mail->Port       = 465;  
+        // $mail->SMTPSecure = "ssl"; 
 
 
         // $mail->setFrom = "jinrai5777@gmail.com"; 
@@ -58,7 +52,7 @@ echo 'Username: ' . $userName . '<br>';
         //Recipients
         $mail->setFrom($email, $email);
         // $mail->addAddress('jinrai5777@gmail.com');     //Add a recipient
-        $mail->addAddress('rajesh.rai@incessantrainacademy.com');     //Add a recipient
+        $mail->addAddress('ticket@incessantrainacademy.com');     //Add a recipient
         // $mail->addAddress('ticket@incessantrainacademy.com');     //Add a recipient
         // $mail->addAddress('ellen@example.com');               //Name is optional
         $mail->addReplyTo($email, $userName);
@@ -90,14 +84,16 @@ echo 'Username: ' . $userName . '<br>';
 
 // Retrieve the form data from the AJAX request
 // $email = $_POST['email'];
-$email = $user['email'];
-$userName = $user['name'];
+// $email = $user['email'];
+// print_r($email);
+$email = 'ira@incessantrainacademy.com';
+// $userName = $user['name'];
+$userName = $_SESSION['userid'];
 
 $departmentId = isset($_POST['department']) ? $_POST['department'] : '';
 $subject = isset($_POST['subject']) ? $_POST['subject'] : '';
 $description = isset($_POST['message']) ? $_POST['message'] : '';
 $status = isset($_POST['status']) ? $_POST['status'] : '';
-
 
 
 if (!empty($departmentId)) {
@@ -110,7 +106,7 @@ echo $departmentName;
 
 
 echo '<br /> User';
-echo implode($user);
+// echo implode($user);
 echo '<br />finish';
 
 echo 'Post';

@@ -55,7 +55,7 @@ $user = $users->getUserInfo();
 						<h4 class="modal-title"><i class="fa fa-plus"></i> Add Department</h4>
 					</div>
 					<div class="modal-body">
-						<div class="form-group"
+						<div class="form-group">
 							<label for="department" class="control-label">Department</label>
 							<input type="text" class="form-control" id="department" name="department" placeholder="department" required>			
 						</div>

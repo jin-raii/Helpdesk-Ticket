@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+// require_once 'Users.php';
+// $users = new Users;
 class Tickets extends Database {  
     private $ticketTable = 'hd_tickets';
 	private $ticketRepliesTable = 'hd_ticket_replies';
@@ -179,7 +179,7 @@ public function showTickets()
         $sqlWhere .= " WHERE ";
     }
 
-    $sqlQuery = "SELECT t.id, t.uniqid, t.title, t.init_msg AS message, t.date, t.last_reply, t.resolved, u.name AS creater, d.name AS department, u.user_type, t.user, t.user_read, t.admin_read
+    $sqlQuery = "SELECT t.id, t.uniqid, t.title, t.init_msg AS message, t.date, t.last_reply, t.resolved, t.solution, u.name AS creater, d.name AS department, u.user_type, t.user, t.user_read, t.admin_read
         FROM hd_tickets t 
         LEFT JOIN hd_users u ON t.user = u.id 
         LEFT JOIN hd_departments d ON t.department = d.id $sqlWhere ";
@@ -188,6 +188,7 @@ public function showTickets()
         $sqlQuery .= ' (uniqid LIKE "%' . $_POST["search"]["value"] . '%" ';
         $sqlQuery .= ' OR title LIKE "%' . $_POST["search"]["value"] . '%" ';
         $sqlQuery .= ' OR resolved LIKE "%' . $_POST["search"]["value"] . '%" ';
+		$sqlQuery .= ' OR user LIKE "%' . $_POST["search"]["value"] . '%" ';
         $sqlQuery .= ' OR last_reply LIKE "%' . $_POST["search"]["value"] . '%") ';
     }
 
@@ -206,6 +207,7 @@ public function showTickets()
     $ticketData = array();
 
     while ($ticket = mysqli_fetch_assoc($result)) {
+		// var_dump($ticket);
         $ticketRows = array();
         $status = '';
         if ($ticket['resolved'] == 0) {
@@ -228,12 +230,22 @@ public function showTickets()
         $ticketRows[] = $ticket['uniqid'];
         $ticketRows[] = $title;
         $ticketRows[] = $ticket['department'];
-        $ticketRows[] = $ticket['creater'];
-		// $ticketRows[] = $ticket['date'];
+		if(isset($_SESSION['admin'])) {
 
+			$ticketRows[] = $ticket['solution'];
+		}
+		// var_dump($ticket['user']);
+		// var_dump($_SESSION['userid']);
+		// Replaced $ticket['creator'] variable to $ticket
+        $ticketRows[] = $ticket['user'];
+		// $ticketRows[] = $_SESSION['userid'];
+		// $ticketRows[] = $ticket['date'];
+		// print_r($ticket['creater']);
+		// print_r($ticket['user']);
+		
 
         $ticketRows[] = date('Y-m-d',$ticket['date']);
-
+		// print_r("Ticket Id : ". $ticket["id"]. "<br>");
 		// $ticketRows[] = date('Y-m-d H:i', strtotime($ticket['date']));
         $ticketRows[] = $status;
         $ticketRows[] = '<a href="view_ticket.php?id=' . $ticket["uniqid"] . '" class="btn btn-success btn-xs update">View Ticket</a>';
@@ -278,15 +290,16 @@ public function showTickets()
 	public function createTicket() {      
 		
 		if(!empty($_POST['subject']) && !empty($_POST['message'])) {      
-			// if(isset($_POST['subject'])){
-			// 	echo 'action';
-			// }          
+			// if(isset($_SESSION['userid'])) {
+			// print_r($_SESSION['userid']);
+			// }       
+			
 			$date = new DateTime();
 			$date = $date->getTimestamp();
 			$uniqid = uniqid();                
-			$message = strip_tags($_POST['subject']);              
-			$queryInsert = "INSERT INTO ".$this->ticketTable." (uniqid, user, title, init_msg, department, date, last_reply, user_read, admin_read, resolved) 
-			VALUES('".$uniqid."', '".$_SESSION["userid"]."', '".$_POST['subject']."', '".$message."', '".$_POST['department']."', '".$date."', '".$_SESSION["userid"]."', 0, 0, '".$_POST['status']."')";			
+			$message = strip_tags($_POST['message']);              
+			$queryInsert = "INSERT INTO ".$this->ticketTable." (uniqid, user, title, init_msg, department, date, last_reply, user_read, admin_read, resolved, solution) 
+			VALUES('".$uniqid."', '".$_SESSION["userid"]."', '".$_POST['subject']."', '".$message."', '".$_POST['department']."', '".$date."', '".$_SESSION["userid"]."', 0, 0, '".$_POST['status']."','".$_POST['solution']."')";			
 			mysqli_query($this->dbConnect, $queryInsert);	
 				
 			echo 'success ' . $uniqid;
@@ -320,9 +333,10 @@ public function showTickets()
 	public function updateTicket() {
 		if($_POST['ticketId']) {	
 			$updateQuery = "UPDATE ".$this->ticketTable." 
-			SET title = '".$_POST["subject"]."', department = '".$_POST["department"]."', init_msg = '".$_POST["message"]."', resolved = '".$_POST["status"]."'
+			SET title = '".$_POST["subject"]."', department = '".$_POST["department"]."', init_msg = '".$_POST["message"]."', resolved = '".$_POST["status"]."', solution = '".$_POST["solution"]."'
 			WHERE id ='".$_POST["ticketId"]."'";
 			$isUpdated = mysqli_query($this->dbConnect, $updateQuery);		
+			var_dump($isUpdated);
 		}	
 	}		
 	public function closeTicket(){
@@ -376,18 +390,35 @@ public function showTickets()
 			mysqli_query($this->dbConnect, $updateTicket);
 		} 
 	}	
-	public function getTicketReplies($id) {  		
-		$sqlQuery = "SELECT r.id, r.text as message, r.date, u.name as creater, d.name as department, u.user_type  
+	// public function getTicketReplies($id) {  		
+	// 	$sqlQuery = "SELECT r.id, r.text as message, r.date, u.name as creater, d.name as department, u.user_type  
+	// 		FROM ".$this->ticketRepliesTable." r
+	// 		LEFT JOIN ".$this->ticketTable." t ON r.ticket_id = t.id
+	// 		LEFT JOIN hd_users u ON r.user = u.id 
+	// 		LEFT JOIN hd_departments d ON t.department = d.id 
+	// 		WHERE r.ticket_id = '".$id."'";	
+	// 	$result = mysqli_query($this->dbConnect, $sqlQuery);
+    //    	$data= array();
+	// 	while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+	// 		$data[]=$row;            
+	// 	}
+    //     return $data;
+    // }
+	public function getTicketReplies($id) {  
+		// var_dump($id);		
+		$sqlQuery = "SELECT r.id, r.text as message, r.date, r.user as creater, d.name as department, t.admin_read 
 			FROM ".$this->ticketRepliesTable." r
-			LEFT JOIN ".$this->ticketTable." t ON r.ticket_id = t.id
-			LEFT JOIN hd_users u ON r.user = u.id 
+			LEFT JOIN ".$this->ticketTable." t ON r.ticket_id = t.id or r.user = t.id 
 			LEFT JOIN hd_departments d ON t.department = d.id 
 			WHERE r.ticket_id = '".$id."'";	
 		$result = mysqli_query($this->dbConnect, $sqlQuery);
+		// var_dump(mysqli_fetch_array($result, MYSQLI_ASSOC));
        	$data= array();
+		
 		while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 			$data[]=$row;            
 		}
+		// print_r($data);
         return $data;
     }
 	public function updateTicketReadStatus($ticketId) {
